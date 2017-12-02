@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DeviceDashboardComponent implements OnInit {
 
+  deviceId = 'test device';
+
   constructor() { }
 
   ngOnInit() {
