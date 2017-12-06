@@ -7,11 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ThingsCollectionComponent implements OnInit {
 
-  
+  things = [{ id: "Bathroom" }, { id: "Living Room" }];
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  myEvent(event) {
+    console.log(event);
+  }
 }
