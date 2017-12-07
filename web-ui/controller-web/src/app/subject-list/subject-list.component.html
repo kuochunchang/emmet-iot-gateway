@@ -1,11 +1,15 @@
 <div class="container-fluid">
+  <div>
+    <h3>Subjects</h3>
+
+  </div>
 
   <div class="panel panel-default" *ngFor="let thing of things" (click)="selectSubject(thing.id)">
     <div class="panel-heading"> {{thing.id}}</div>
     <div class="panel-body">
-      <div class="row">...</div>
+      <div class="row"></div>
 
-     
+
     </div>
   </div>
 </div>

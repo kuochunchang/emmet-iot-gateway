@@ -10,7 +10,7 @@ import { SubjectDashboardComponent } from './subject-dashboard/subject-dashboard
 import { SubjectListComponent } from './subject-list/subject-list.component';
 
 const appRoutes: Routes = [
-  { path: 'subjects/:id', component: DeviceDashboardComponent },
+  { path: 'subjects/:id', component: SubjectDashboardComponent },
   { path: 'subjects', component: SubjectListComponent },
 
   {
