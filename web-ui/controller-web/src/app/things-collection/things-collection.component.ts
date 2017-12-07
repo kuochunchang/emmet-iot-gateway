@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-things-collection',
@@ -9,12 +10,15 @@ export class ThingsCollectionComponent implements OnInit {
 
   things = [{ id: "Bathroom" }, { id: "Living Room" }];
 
-  constructor() { }
+  constructor(private router: Router) {
+
+  }
 
   ngOnInit() {
   }
 
-  myEvent(event) {
-    console.log(event);
+  selectSubjectE(id) {
+    console.log(id);
+    this.router.navigateByUrl('/devices/' + id, );
   }
 }

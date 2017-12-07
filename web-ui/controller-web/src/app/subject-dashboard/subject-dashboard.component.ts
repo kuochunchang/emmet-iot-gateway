@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-device-dashboard',
-  templateUrl: './device-dashboard.component.html',
-  styleUrls: ['./device-dashboard.component.css']
+  selector: 'app-subject-dashboard',
+  templateUrl: './subject-dashboard.component.html',
+  styleUrls: ['./subject-dashboard.component.css']
 })
-export class DeviceDashboardComponent implements OnInit {
-  id : string
+export class SubjectDashboardComponent implements OnInit {
+
+  id: string
   deviceId = 'test device';
 
   constructor(private route: ActivatedRoute) { }
@@ -15,5 +16,4 @@ export class DeviceDashboardComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id']
   }
-
 }
