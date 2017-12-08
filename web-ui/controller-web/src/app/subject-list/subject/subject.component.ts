@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as Rx from 'rxjs/Rx';
 
 @Component({
   selector: 'app-subject',
@@ -8,8 +9,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SubjectComponent implements OnInit {
 
- id: string
+  id: string
   deviceId = 'test device';
+
+  topics = [{name: "Humidity", value: "70"}, {name: "Temperature", value: "25"}]
 
   constructor(private route: ActivatedRoute) { }
 

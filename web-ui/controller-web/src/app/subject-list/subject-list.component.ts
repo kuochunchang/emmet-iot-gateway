@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class SubjectListComponent implements OnInit {
 
-  things = [{ id: "Bathroom" }, { id: "LivingRoom" }];
+  subjects = [{ id: "1", name: "Bathroom" }, { id: "2", name: "LivingRoom" }];
 
   constructor(private router: Router) {
 
