@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SubjectDataService } from '../subject-data.service';
 import * as Rx from 'rxjs/Rx';
 
 @Component({
@@ -9,14 +10,15 @@ import * as Rx from 'rxjs/Rx';
 })
 export class SubjectComponent implements OnInit {
 
-  id: string
-  deviceId = 'test device';
+  id: number
+  name: string
 
-  topics = [{name: "Humidity", value: "70"}, {name: "Temperature", value: "25"}]
+  topics = [{ name: "Humidity", value: "70" }, { name: "Temperature", value: "25" }]
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private subjectDataService: SubjectDataService) { }
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id']
+    this.name = this.subjectDataService.subjects[this.id - 1].name;
   }
 }

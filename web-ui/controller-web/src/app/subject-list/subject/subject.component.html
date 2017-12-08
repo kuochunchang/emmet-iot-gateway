@@ -1,7 +1,11 @@
 <div class="container-fluid">
+
+  <div>
+    <H3>{{name}}</H3>
+  </div>
   <div>
     <H3>Topics</H3>
-  </div>
+  </div> 
   <div class="panel panel-default" *ngFor="let topic of topics">
     <div class="panel-heading"> {{topic.name}}</div>
     <div class="panel-body">

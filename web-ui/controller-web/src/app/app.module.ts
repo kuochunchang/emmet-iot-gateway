@@ -7,6 +7,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { SubjectListComponent } from './subject-list/subject-list.component';
 import { SubjectComponent } from './subject-list/subject/subject.component';
 import { TopicComponent } from './topic/topic.component';
+import { SubjectDataService } from './subject-list/subject-data.service';
 
 const appRoutes: Routes = [
   { path: 'subjects/:id', component:  SubjectComponent},
@@ -36,7 +37,7 @@ const appRoutes: Routes = [
       { enableTracing: false } // <-- debugging purposes only
     )
   ],
-  providers: [],
+ providers: [SubjectDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
