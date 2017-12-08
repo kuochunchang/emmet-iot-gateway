@@ -3,19 +3,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { DeviceDashboardComponent } from './device-dashboard/device-dashboard.component';
-import { ThingsCollectionComponent } from './things-collection/things-collection.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { SubjectDashboardComponent } from './subject-dashboard/subject-dashboard.component';
 import { SubjectListComponent } from './subject-list/subject-list.component';
+import { SubjectComponent } from './subject-list/subject/subject.component';
 
 const appRoutes: Routes = [
-  { path: 'subjects/:id', component: SubjectDashboardComponent },
+  { path: 'subjects/:id', component:  SubjectComponent},
   { path: 'subjects', component: SubjectListComponent },
 
   {
     path: '',
-    redirectTo: '/things',
+    redirectTo: '/subjects',
     pathMatch: 'full'
   },
   { path: '**', component: PageNotFoundComponent }
@@ -25,11 +23,9 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    DeviceDashboardComponent,
-    ThingsCollectionComponent,
     PageNotFoundComponent,
-    SubjectDashboardComponent,
-    SubjectListComponent
+    SubjectListComponent,
+    SubjectComponent
   ],
   imports: [
     BrowserModule,
