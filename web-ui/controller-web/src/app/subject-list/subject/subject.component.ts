@@ -13,7 +13,7 @@ export class SubjectComponent implements OnInit {
   id: string
   name: string
 
-  topics = [{ id: "time" }, { id: "test" }]
+  topics = [{ id: "time" }, { id: "device-0001" }]
 
   constructor(private route: ActivatedRoute, private subjectDataService: SubjectDataService) { }
 
