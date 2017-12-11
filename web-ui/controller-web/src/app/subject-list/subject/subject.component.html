@@ -6,10 +6,7 @@
   <div>
     <H5>Topics</H5>
   </div> 
-  <div class="panel panel-default" *ngFor="let topic of topics">
-    <div class="panel-heading"> {{topic.name}}</div>
-    <div class="panel-body">
-      {{topic.value}}
-    </div>
+  <div *ngFor="let topic of topics">
+    <app-topic [id]="topic.id"></app-topic>
   </div>
 </div>
