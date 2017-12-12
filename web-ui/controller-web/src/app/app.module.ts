@@ -70,6 +70,8 @@ const appRoutes: Routes = [
       provide: StompConfig,
       useValue: stompConfig
     }
+
+
   ],
   bootstrap: [AppComponent]
 
