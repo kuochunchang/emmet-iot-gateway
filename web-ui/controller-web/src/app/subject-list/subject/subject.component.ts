@@ -18,18 +18,18 @@ export class SubjectComponent implements OnInit {
     "subject": "s1",
     "topics": [{
       "name": "Tempareture",
-      "data": "bathroom.temperature"
+      "data": "view.bathroom.temperature.get"
     },
     {
       "name": "Humidity",
-      "data": "bathroom.humidity"
+      "data": "view.bathroom.humidity.get"
     },
     {
       "name": "Fan",
-      "data": "bathroom.fan"
+      "data": "view.bathroom.fan.get"
     }, {
       "name": "Power",
-      "data": "bathroom.power"
+      "data": "view.bathroom.power.get"
     }
     ]
   }

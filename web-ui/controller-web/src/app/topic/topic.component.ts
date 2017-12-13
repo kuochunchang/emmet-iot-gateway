@@ -15,6 +15,7 @@ export class TopicComponent implements OnInit {
   @Input() topic: any
   subscribed: boolean
   value: any
+  online: any
 
   private subscription: Subscription;
   public messages: Observable<Message>;
@@ -61,8 +62,12 @@ export class TopicComponent implements OnInit {
   public on_next = (message: Message) => {
 
     // Log it to the console
-    this.value = JSON.parse(message.body).value;
-    //console.log(message);
+    let msgBody = JSON.parse(message.body);
+    this.value = msgBody.value;
+    this.online  =  msgBody.online ? "online" : "offine"
+  
+    //console.log(this.value);
+    console.log(message);
   }
 }
 

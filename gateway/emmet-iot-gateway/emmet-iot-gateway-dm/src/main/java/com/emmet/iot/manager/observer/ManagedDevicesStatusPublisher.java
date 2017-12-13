@@ -50,9 +50,10 @@ public class ManagedDevicesStatusPublisher extends BaseDeviceStatusObserver {
 		
 		String deviceId = status.getDeviceId();
 		status.getChannels().forEach(channel -> {
+			channel.setOnline(status.isOnline());
 			String message = JsonHelper.ObjectToJsonString(channel);
 			String channelName = channel.getName();
-			String routeKey = routingKeyPrefix + deviceId + "." + channelName;
+			String routeKey = routingKeyPrefix + deviceId + "." + channelName + ".get";
 			log.debug("Send data to RabbitMq, routing key: "+ routeKey + " message: " + message);
 			this.rabbitTemplate.convertAndSend(deviceTopic, routeKey, message);
 		});

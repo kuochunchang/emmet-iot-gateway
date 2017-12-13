@@ -37,8 +37,8 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 
 	@Autowired
 	ManagedDevicesStatusPublisher managedDevicesStatusPublisher;
-	
-//	private DevicesTopic mqttTopic = new DevicesTopic();
+
+	// private DevicesTopic mqttTopic = new DevicesTopic();
 
 	private static final Log log = LogFactory.getLog(DeviceCollection.class);
 
@@ -75,6 +75,9 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 
 		String heartbeatTopic = DevicesTopic.heartbeat();
 		subscribe(heartbeatTopic);
+		
+		Thread t = new Thread(new HeartbeatWatchdog());
+		t.start();
 	}
 
 	@Override
@@ -92,6 +95,8 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 	@PreDestroy
 	public void shutdown() {
 
+		watchDogisRunning = false;
+		
 		log.info("########## Shuting down device shadows...##########");
 		for (DeviceShadow device : devices) {
 			log.info("Shuting down device: " + device.getDeviceId());
@@ -129,13 +134,13 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 				if (!deviceShadow.isOnLine()) {
 					this.sendDeviceStatusReportRequest(deviceId);
 				}
-				
+
 			} catch (DeviceNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+
 		deviceShadow.updateHeartbeatTime(System.currentTimeMillis());
 	}
 
@@ -176,6 +181,40 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 			}
 		}
 		return false;
+	}
+
+	private boolean watchDogisRunning = true;
+
+	class HeartbeatWatchdog implements Runnable {
+		@Override
+		public void run() {
+		
+			while (watchDogisRunning) {
+				log.debug("------------------HeartbeatWatchdog------------------------");
+				Thread.currentThread();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				devices.forEach(device -> {
+					if (!device.isOnLine()) {
+						log.debug(device.getDeviceId() + " is offline");
+						DeviceStatusNotification status = new DeviceStatusNotification();
+						status.setOnline(false);
+						status.setDeviceId(device.getDeviceId());
+						device.getCurrentStatus().getDataChannels().forEach((name,value)->{
+							status.setChannelValue(name, "");
+						});
+						
+						managedDevicesStatusPublisher.handle(status);
+					}
+				});
+
+			}
+			log.info("Heartbeat Watchdog was stoped.");
+		}
 	}
 
 }
