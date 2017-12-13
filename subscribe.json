@@ -1,0 +1,29 @@
+//account/kcc/subjects
+// {
+//     "account" : "kcc",
+//     "sujects" : [
+//         {"id" : "s1", "name": "Bathroom"},
+//         {"id" : "s2", "name": "Living Room"}
+//     ]
+// }
+
+//account/kcc/subject/s1/topics
+{
+    "subject": "s1",
+    "topics": [{
+            "name": "Tempareture",
+            "data": "bathroom.temperature"
+        },
+        {
+            "name": "Humidity",
+            "data": "bathroom.humidity"
+        },
+        {
+            "name": "Fan",
+            "data": "bathroom.fan"
+        },        {
+            "name": "Power",
+            "data": "bathroom.power"
+        }
+    ]
+}

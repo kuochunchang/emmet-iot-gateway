@@ -12,7 +12,7 @@ import { StompService } from '@stomp/ng2-stompjs';
 })
 export class TopicComponent implements OnInit {
 
-  @Input() id: string
+  @Input() topic: any
   subscribed: boolean
   value: any
 
@@ -34,7 +34,7 @@ export class TopicComponent implements OnInit {
       return;
     }
     // Stream of messages
-    this.messages = this.stompService.subscribe('/topic/' + this.id);
+    this.messages = this.stompService.subscribe('/topic/' + this.topic.data);
 
     // Subscribe a function to be run on_next message
     this.subscription = this.messages.subscribe(this.on_next);
@@ -61,7 +61,7 @@ export class TopicComponent implements OnInit {
   public on_next = (message: Message) => {
 
     // Log it to the console
-    this.value = message.body;
+    this.value = JSON.parse(message.body).value;
     //console.log(message);
   }
 }

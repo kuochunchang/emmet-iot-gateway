@@ -101,8 +101,9 @@ public class MockDevice extends MqttPubSubClient {
 	private DeviceStatusNotification getRabdomStatus() {
 		DeviceStatusNotification status = new DeviceStatusNotification();
 		status.setDeviceId(deviceId);
-		status.setChannelValue("1", getRandomValue(0, 100).toString());
-		status.setChannelValue("2", getRandomValue(0, 100).toString());
+		status.setChannelValue("A1", getRandomValue(20, 28).toString());
+		status.setChannelValue("A2", getRandomValue(1, 3).toString());
+		status.setChannelValue("D1", getRandomValue(0, 2).toString());
 
 		return status;
 
@@ -114,9 +115,7 @@ public class MockDevice extends MqttPubSubClient {
 
 	private Integer getRandomValue(int low, int high) {
 		Random r = new Random();
-		int Low = 10;
-		int High = 100;
-		return r.nextInt(High - Low) + Low;
+		return r.nextInt(high - low) + low;
 	}
 
 	private Thread startRandomStatus() {
