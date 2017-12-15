@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.emmet.iot.core.config.Constant;
+import com.emmet.iot.core.model.ChannelUpdateRequest;
 import com.emmet.iot.core.model.DeviceCommand;
 import com.emmet.iot.core.model.DeviceStatusNotification;
 import com.emmet.iot.core.model.Heartbeat;
@@ -46,11 +47,28 @@ public class MockDevice extends MqttPubSubClient {
 			DeviceCommand cmd = JsonHelper.JsonStringToObject(new String(msg.getPayload()), DeviceCommand.class);
 			if (cmd.getCommand().equals(DeviceCommand.NAME.REPORT_STATUS)) {
 
-				publishStatus(getRabdomStatus());
-			}
+				publishStatus(getRandomStatus());
 
+			} else if (topic.startsWith(new DevicesTopic().device(deviceId).update())) {
+				ChannelUpdateRequest request = JsonHelper.JsonStringToObject(msg.toString(),
+						ChannelUpdateRequest.class);
+				System.out.println("-------> update: " + request);
+				updateDevice(request);
+			}
 		}
-		//
+
+	}
+
+	private void updateDevice(ChannelUpdateRequest request) {
+        String channelName = request.getName();
+		channles.put(channelName, request.getValue());
+		DeviceStatusNotification notification = new DeviceStatusNotification();
+		notification.setDeviceId(deviceId);
+		notification.setChannelValue(channelName, channles.get(channelName).toString());
+		log.info("Mock device channel updated." + notification);
+
+		publishStatus(notification);
+
 	}
 
 	private static final Log log = LogFactory.getLog(MockDevice.class);
@@ -98,12 +116,12 @@ public class MockDevice extends MqttPubSubClient {
 
 	// -------------------------------------------------------------
 
-	private DeviceStatusNotification getRabdomStatus() {
+	private DeviceStatusNotification getRandomStatus() {
 		DeviceStatusNotification status = new DeviceStatusNotification();
 		status.setDeviceId(deviceId);
 		status.setChannelValue("A1", getRandomValue(20, 28).toString());
 		status.setChannelValue("A2", getRandomValue(1, 3).toString());
-		status.setChannelValue("D1", getRandomValue(0, 2).toString());
+		// status.setChannelValue("D1", getRandomValue(0, 2).toString());
 
 		return status;
 
@@ -125,14 +143,20 @@ public class MockDevice extends MqttPubSubClient {
 			public void run() {
 				while (!isShutdown) {
 					try {
-						publishStatus(getRabdomStatus());
+
+						DeviceStatusNotification notification = getRandomStatus();
+						notification.getChannels().forEach(channle -> {
+							channles.put(channle.getName(), channle.getValue());
+						});
+
+						publishStatus(notification);
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				DeviceStatusNotification status = getRabdomStatus();
+				DeviceStatusNotification status = getRandomStatus();
 				status.setOnline(false);
 				publishStatus(status);
 			}

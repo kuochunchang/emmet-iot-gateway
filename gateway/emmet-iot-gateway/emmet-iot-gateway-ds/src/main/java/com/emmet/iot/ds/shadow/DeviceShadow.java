@@ -9,6 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import com.emmet.iot.core.config.Constant;
 import com.emmet.iot.core.model.ChannelStatus;
+import com.emmet.iot.core.model.ChannelUpdateRequest;
 import com.emmet.iot.core.model.DeviceDataModel;
 import com.emmet.iot.core.model.DeviceStatusListener;
 import com.emmet.iot.core.model.DeviceStatusNotification;
@@ -26,12 +27,14 @@ public class DeviceShadow extends MqttPubSubClient {
 	private long lastHeartbeatTimeMili;
 	private DeviceDataModel deviceDataModel;
 	private String deviceStatusTopic;
+	private String deviceUpdateTopic;
 	private String refreshStatusTopic;
 	private DeviceStatusListener statusListener;
 
 	private static final Log log = LogFactory.getLog(DeviceShadow.class);
 
-	public DeviceShadow(String deviceId, String mqttBrokerUrl, DeviceStatusListener statusListener) throws MqttException {
+	public DeviceShadow(String deviceId, String mqttBrokerUrl, DeviceStatusListener statusListener)
+			throws MqttException {
 
 		this.deviceId = deviceId;
 		this.setBrokerUrl(mqttBrokerUrl);
@@ -47,8 +50,7 @@ public class DeviceShadow extends MqttPubSubClient {
 	}
 
 	private void initMqttTopic() throws MqttException {
-		DeviceTopic topic = new DevicesTopic().device(deviceId);
-		deviceStatusTopic = topic.status();
+		deviceStatusTopic = new DevicesTopic().device(deviceId).status();
 	}
 
 	@Override
@@ -59,11 +61,12 @@ public class DeviceShadow extends MqttPubSubClient {
 		sendRefreshDeviceStatusRequest();
 	}
 
-	private void updateChannel(ChannelStatus request) throws UpdateChannleException {
+	private void updateShadow(ChannelStatus request) throws UpdateChannleException {
 		deviceDataModel.updateModel(request.getName(), request.getValue());
 
 		log.debug("<Device Shdow> Channle status model updated! " + request);
 	}
+
 
 	public DeviceDataModel getCurrentStatus() {
 		deviceDataModel.setOnline(isOnLine());
@@ -75,35 +78,37 @@ public class DeviceShadow extends MqttPubSubClient {
 		log.debug("<Device Shdow> Message arrived! " + " topic: " + topic + " message: " + msg.toString());
 
 		if (topic.equals(deviceStatusTopic)) {
-			log.debug("<Device Shdow (" + deviceId + ")> Channel status notification! " + " topic: " + topic + " message: " + msg.toString());
+			log.debug("<Device Shdow (" + deviceId + ")> Channel status notification! " + " topic: " + topic
+					+ " message: " + msg.toString());
 			DeviceStatusNotification status = JsonHelper.JsonStringToObject(msg.toString(),
 					DeviceStatusNotification.class);
 			for (ChannelStatus channle : status.getChannels()) {
 
 				try {
-					this.updateChannel(channle);
+					this.updateShadow(channle);
 				} catch (UpdateChannleException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
+
 			statusListener.onDeviceStatusChange(this.getStatus());
-			
+
 		} else {
 			log.warn("## The message is ignored ## topic: " + topic + " message: " + msg);
 		}
 	}
-	
-	
-	public DeviceStatusNotification getStatus(){
+
+
+
+	public DeviceStatusNotification getStatus() {
 		DeviceStatusNotification status = new DeviceStatusNotification();
 		status.setDeviceId(getDeviceId());
 		status.setOnline(isOnLine());
-		deviceDataModel.getDataChannels().forEach((name, value)->{
+		deviceDataModel.getDataChannels().forEach((name, value) -> {
 			status.setChannelValue(name, value.toString());
 		});
-		
+
 		return status;
 	}
 

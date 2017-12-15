@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import com.emmet.iot.core.amqp.DeviceRoutingkey;
 import com.emmet.iot.core.config.Constant;
 import com.emmet.iot.core.model.DeviceStatusNotification;
 import com.emmet.iot.core.mqtt.DevicesTopic;
@@ -27,12 +28,12 @@ public class ManagedDevicesStatusPublisher extends BaseDeviceStatusObserver {
 	@Autowired
 	private AmqpTemplate rabbitTemplate;
 
-	final static String deviceTopic = "device-status";
+	final static String deviceStatusTopic = "device-status";
 	final static String routingKeyPrefix = "device.";
 
 	@Bean
     TopicExchange exchange() {
-        return new TopicExchange(deviceTopic);
+        return new TopicExchange(deviceStatusTopic);
     }
 	
 	@PostConstruct
@@ -53,9 +54,10 @@ public class ManagedDevicesStatusPublisher extends BaseDeviceStatusObserver {
 			channel.setOnline(status.isOnline());
 			String message = JsonHelper.ObjectToJsonString(channel);
 			String channelName = channel.getName();
-			String routeKey = routingKeyPrefix + deviceId + "." + channelName + ".get";
+			String routeKey = new DeviceRoutingkey(deviceId).cannel(channelName).status();
+					//routingKeyPrefix + deviceId + "." + channelName + ".get";
 			log.debug("Send data to RabbitMq, routing key: "+ routeKey + " message: " + message);
-			this.rabbitTemplate.convertAndSend(deviceTopic, routeKey, message);
+			this.rabbitTemplate.convertAndSend(deviceStatusTopic, routeKey, message);
 		});
 
 	}
