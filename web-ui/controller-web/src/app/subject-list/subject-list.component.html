@@ -4,11 +4,15 @@
 
   </div>
 
-  <div class="panel panel-default" *ngFor="let subject of subjects" (click)="selectSubject(subject.id)">
+  <div class="panel panel-default" *ngFor="let subject of subjects; let idx = index" (click)="selectSubject(subject.id)">
     <div class="panel-heading">{{subject.name}}</div>
     <div class="panel-body">
-      <div class="row">
-
+      <div *ngFor="let topic of subjects[idx].topics">
+        <div class="row">
+          <div class="col-sm" style="padding-left:15px;">
+            <span class="label label-success">{{topic.name}}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

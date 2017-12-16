@@ -1,5 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -9,6 +12,9 @@ import { SubjectComponent } from './subject-list/subject/subject.component';
 import { TopicComponent } from './topic/topic.component';
 import { SubjectDataService } from './subject-list/subject-data.service';
 import { StompConfig, StompService } from '@stomp/ng2-stompjs';
+
+import { UiSwitchModule } from 'angular2-ui-switch'
+
 
 const stompConfig: StompConfig = {
   // Which server?
@@ -59,12 +65,15 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    UiSwitchModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: false } // <-- debugging purposes only
     )
   ],
-  providers: [SubjectDataService,
+  providers: [
+    SubjectDataService,
     StompService,
     {
       provide: StompConfig,

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SubjectDataService } from './subject-data.service';
+import { TopicModel } from '../topic/topic-models';
 
 @Component({
   selector: 'app-subject-list',
@@ -8,17 +10,15 @@ import { Router } from '@angular/router';
 })
 export class SubjectListComponent implements OnInit {
 
-  subjects = [{ id: "1", name: "Bathroom" }, { id: "2", name: "LivingRoom" }];
+  subjects: TopicModel[]
 
-  constructor(private router: Router) {
-
-  }
+  constructor(private router: Router, private subjectDataService: SubjectDataService) { }
 
   ngOnInit() {
+    this.subjects = [this.subjectDataService.subjects[0], this.subjectDataService.subjects[1]];
   }
 
   selectSubject(id) {
-    console.log(id);
     this.router.navigateByUrl('/subjects/' + id, );
   }
 

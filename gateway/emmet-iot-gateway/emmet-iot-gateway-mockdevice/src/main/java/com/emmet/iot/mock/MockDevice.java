@@ -39,6 +39,8 @@ public class MockDevice extends MqttPubSubClient {
 
 	private Map<String, Object> channles = new HashMap<>();
 
+	private Boolean poweOn = false;
+
 	@Override
 	public void mqttMessageArrived(String topic, MqttMessage msg) {
 		log.info(this.deviceId + " received a new message!  topic: " + topic + " message: " + msg);
@@ -46,22 +48,23 @@ public class MockDevice extends MqttPubSubClient {
 		if (topic.startsWith(Constant.DEVICE_COMMAND_TOPIC_PREFIX + deviceId)) {
 			DeviceCommand cmd = JsonHelper.JsonStringToObject(new String(msg.getPayload()), DeviceCommand.class);
 			if (cmd.getCommand().equals(DeviceCommand.NAME.REPORT_STATUS)) {
-
 				publishStatus(getRandomStatus());
-
-			} else if (topic.startsWith(new DevicesTopic().device(deviceId).update())) {
-				ChannelUpdateRequest request = JsonHelper.JsonStringToObject(msg.toString(),
-						ChannelUpdateRequest.class);
-				System.out.println("-------> update: " + request);
-				updateDevice(request);
 			}
+
+		}
+
+		if (topic.equals(new DevicesTopic().device(deviceId).update())) {
+			ChannelUpdateRequest request = JsonHelper.JsonStringToObject(msg.toString(), ChannelUpdateRequest.class);
+			System.out.println("-------> update: " + request);
+			updateDevice(request);
 		}
 
 	}
 
 	private void updateDevice(ChannelUpdateRequest request) {
-        String channelName = request.getName();
+		String channelName = request.getName();
 		channles.put(channelName, request.getValue());
+		log.info("Status updated" +  channles);
 		DeviceStatusNotification notification = new DeviceStatusNotification();
 		notification.setDeviceId(deviceId);
 		notification.setChannelValue(channelName, channles.get(channelName).toString());
@@ -75,7 +78,8 @@ public class MockDevice extends MqttPubSubClient {
 
 	@PostConstruct
 	public void init() {
-
+		channles.put("D1", false);
+		
 		this.setBrokerUrl(brokerUrl);
 		DeviceTopic mqttTopic = new DevicesTopic().device(deviceId);
 
@@ -98,6 +102,7 @@ public class MockDevice extends MqttPubSubClient {
 			super.connect();
 
 			subscribe(controlTopic);
+			subscribe(new DevicesTopic().device(deviceId).update());
 
 			startHeartbeat();
 			startRandomStatus();
@@ -121,7 +126,7 @@ public class MockDevice extends MqttPubSubClient {
 		status.setDeviceId(deviceId);
 		status.setChannelValue("A1", getRandomValue(20, 28).toString());
 		status.setChannelValue("A2", getRandomValue(1, 3).toString());
-		// status.setChannelValue("D1", getRandomValue(0, 2).toString());
+		status.setChannelValue("D1", this.channles.get("D1").toString());
 
 		return status;
 

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import com.emmet.iot.core.config.Constant;
 import com.emmet.iot.core.model.ChannelStatus;
@@ -67,6 +68,9 @@ public class DeviceShadow extends MqttPubSubClient {
 		log.debug("<Device Shdow> Channle status model updated! " + request);
 	}
 
+	public void updateDevice(ChannelUpdateRequest request) throws MqttPersistenceException, MqttException {
+		publish(new DevicesTopic().device(deviceId).update(), JsonHelper.ObjectToJsonString(request));
+	}
 
 	public DeviceDataModel getCurrentStatus() {
 		deviceDataModel.setOnline(isOnLine());

@@ -1,12 +1,12 @@
 <div class="container-fluid">
 
   <div>
-    <H4>{{name}}</H4>
+    <H4>Subject: {{name}}</H4>
   </div>
   <div>
-    <H5>Topics</H5>
+    <H5>Topics:</H5>
   </div> 
-  <div *ngFor="let topic of topics">
-    <app-topic [topic]="topic"></app-topic>
+  <div *ngFor="let topic of subject.topics">
+    <app-topic [topic]="topic" [subject]="id"></app-topic>
   </div>
 </div>

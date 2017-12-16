@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubjectDataService } from '../subject-data.service';
+import { TopicModel } from '../../topic/topic-models';
+import { SubjectModel } from './subject-models';
+
 
 
 @Component({
@@ -10,38 +13,19 @@ import { SubjectDataService } from '../subject-data.service';
 })
 export class SubjectComponent implements OnInit {
 
-  id: string
+  @Input() id: string
   name: string
 
-  // topics = [{ id: "device.device-0001.A1" }, { id: "device.device-0001.A2" }, { id: "device.device-0001.D1" }]
-  subject = {
-    "subject": "s1",
-    "topics": [{
-      "name": "Tempareture",
-      "data": "view.bathroom.temperature.status"
-    },
-    {
-      "name": "Humidity",
-      "data": "view.bathroom.humidity.status"
-    },
-    {
-      "name": "Fan",
-      "data": "view.bathroom.fan.status"
-    }, {
-      "name": "Power",
-      "data": "view.bathroom.power.status"
-    }
-    ]
-  }
-  
+  subject: SubjectModel
 
-  topics = this.subject.topics
 
-  constructor(private route: ActivatedRoute, private subjectDataService: SubjectDataService) { }
+  constructor(private route: ActivatedRoute, private subjectDataService: SubjectDataService){  }
 
   ngOnInit() {
-
-    //this.id = this.route.snapshot.params['id']
-    //this.name = this.subjectDataService.subjects[this.id - 1].name;
+    this.route.params.subscribe(params => {
+      this.id = params['id']
+    })
+    this.subject = this.subjectDataService.getSubject(this.id);
+    this.name = this.subject.name
   }
 }
