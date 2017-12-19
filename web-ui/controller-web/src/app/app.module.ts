@@ -18,15 +18,16 @@ import { UiSwitchModule } from 'angular2-ui-switch'
 
 const stompConfig: StompConfig = {
   // Which server?
-  url: 'ws://127.0.0.1:15674/ws',
+  url: 'ws://iot.emmet-project.com:15674/ws',
 
   // Headers
   // Typical keys: login, passcode, host
   headers: {
-    login: 'guest',
-    passcode: 'guest'
+    login: 'emmet',
+    passcode: 'masterbuilder'
   },
 
+  
   // How often to heartbeat?
   // Interval in milliseconds, set to 0 to disable
   heartbeat_in: 0, // Typical value 0 - disabled

@@ -6,6 +6,10 @@ OUTPUT_GOIO = [20]
 current_data = {}
 
 
+def get_dht11():
+    print("DHT11")
+
+
 # initial current data
 for i in INPUT_GOIO:
     current_data[i] = 100
@@ -21,3 +25,4 @@ while True:
 
     for key, value in current_data.items():
         print("%s: %s" % (key, value))
+        get_dht11()
