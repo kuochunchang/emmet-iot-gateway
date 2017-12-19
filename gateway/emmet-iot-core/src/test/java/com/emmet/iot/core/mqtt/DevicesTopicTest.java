@@ -12,6 +12,7 @@ public class DevicesTopicTest {
 		DevicesTopic topic = new DevicesTopic();
 		assertThat(topic.device("foo").update(), equalTo("/devices/foo/update"));
 		assertThat(topic.device("foo").status(), equalTo("/devices/foo/status"));
+		assertThat(topic.device("foo").control(), equalTo("/devices/foo/control"));
 
 		
 		assertThat(DevicesTopic.heartbeat(), equalTo("/devices/heartbeat"));

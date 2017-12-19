@@ -45,7 +45,7 @@ public class MockDevice extends MqttPubSubClient {
 	public void mqttMessageArrived(String topic, MqttMessage msg) {
 		log.info(this.deviceId + " received a new message!  topic: " + topic + " message: " + msg);
 
-		if (topic.startsWith(Constant.DEVICE_COMMAND_TOPIC_PREFIX + deviceId)) {
+		if (topic.equals(controlTopic)) {
 			DeviceCommand cmd = JsonHelper.JsonStringToObject(new String(msg.getPayload()), DeviceCommand.class);
 			if (cmd.getCommand().equals(DeviceCommand.NAME.REPORT_STATUS)) {
 				publishStatus(getRandomStatus());
@@ -83,7 +83,7 @@ public class MockDevice extends MqttPubSubClient {
 		this.setBrokerUrl(brokerUrl);
 		DeviceTopic mqttTopic = new DevicesTopic().device(deviceId);
 
-		this.controlTopic = Constant.DEVICE_COMMAND_TOPIC_PREFIX + deviceId;
+		this.controlTopic = new DeviceTopic(deviceId).control();;
 		this.heartbeatTopic = DevicesTopic.heartbeat();
 		this.statusTopic = mqttTopic.status();
 		this.connect();

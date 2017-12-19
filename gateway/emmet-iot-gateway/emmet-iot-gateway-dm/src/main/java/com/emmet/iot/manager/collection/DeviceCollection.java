@@ -20,6 +20,7 @@ import com.emmet.iot.core.model.DeviceStatusNotification;
 import com.emmet.iot.core.model.Heartbeat;
 import com.emmet.iot.core.model.RequestDeviceStatusCommand;
 import com.emmet.iot.core.mqtt.MqttPubSubClient;
+import com.emmet.iot.core.mqtt.DeviceTopic;
 import com.emmet.iot.core.mqtt.DevicesTopic;
 import com.emmet.iot.core.observer.DeviceStatusObserver;
 import com.emmet.iot.core.observer.DeviceStatusSubject;
@@ -118,7 +119,7 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 		String deviceId = heartbeat.getDeviceId();
 		DeviceShadow deviceShadow = null;
 		if (!isDeviceShadowManaged(deviceId)) {
-			this.sendDeviceStatusReportRequest(deviceId);
+			
 			try {
 				deviceShadow = new DeviceShadow(deviceId, mqttBrokerUrl, this);
 				deviceShadow.connect();
@@ -128,6 +129,9 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			this.sendDeviceStatusReportRequest(deviceId);
+			
 		} else {
 			try {
 				deviceShadow = this.getDevice(deviceId);
@@ -167,7 +171,7 @@ public class DeviceCollection extends MqttPubSubClient implements DeviceStatusLi
 	// --------------------------------------------------------------------------
 
 	private void sendDeviceStatusReportRequest(String deviceId) {
-		String deviceControlTopic = Constant.DEVICE_COMMAND_TOPIC_PREFIX + deviceId;
+		String deviceControlTopic = new DeviceTopic(deviceId).control();
 		RequestDeviceStatusCommand command = new RequestDeviceStatusCommand();
 
 		this.publish(deviceControlTopic, command);
